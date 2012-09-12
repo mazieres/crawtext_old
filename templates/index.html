@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Crawtext{% endblock %}
+{% block content %}
+<h1>Crawtext</h1>
+<br />
+<form action="{{ url_for('start_crawler') }}" method=post>
+Query :: <input type="text" name="query" value="">
+<br />
+Depth :: <input type="number" name="depth" value="2">
+<br />
+<input type="submit" value="Start Crawl">
+</form>
+{% endblock %}

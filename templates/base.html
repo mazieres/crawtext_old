@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    {% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='jquery-1.8.1.min.js')}}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js')}}">
+    <title>{% block title %}{% endblock %} - My Webpage</title>
+    {% endblock %}
+  </head>
+<body>
+  <div id="content">{% block content %}{% endblock %}</div>
+  <div id="footer">
+    {% block footer %}
+	 <br />
+     <a href="https://github.com/mazieres/crawtext">Source code</a> | <a href="mailto:contact@cortext.fr">Contact</a> | &copy; Copyright 2012 by <a href="http://www.cortext.fr">Cortext</a>.
+    {% endblock %}
+  </div>
+</body>
