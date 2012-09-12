@@ -18,6 +18,7 @@ from decruft import Document
 import operator
 from lxml import etree
 import copy
+from pattern.graph import *
 
 reload(sys) 
 sys.setdefaultencoding("utf-8")
@@ -168,13 +169,25 @@ def query_bing(query_words, password, nb_results=10, market="fr-FR", username=''
 		seeds.add(each['Url'])
 	return seeds
 
+def graph(posts):
+	g = Graph()
+	for each in posts:
+		g.add_node(each)
+	for url in posts:
+		for outlink in posts[url]['outlinks']:
+			g.add_edge(url, outlink, weight=0.0, type='is-related-to')
+	timestamp = ''
+	for each in time.localtime()[:]:
+		timestamp += str(each) + "_"
+	export(g, 'graph_%s' % timestamp, directed=True, width=1000, height=600, distance=15)
+
 def post_to_db(query, posts):
 	connection = Connection()
 	connection = Connection('localhost', 27017)
 
 	timestamp = ''
 	for each in time.localtime()[:]:
-		timestamp += str(each) + "."
+		timestamp += str(each) + "_"
 
 	db = connection['crOOw']
 	collection_name = "%s_%s" % (query.replace(' ',''), timestamp)
@@ -214,7 +227,7 @@ def parse(url):
 	u.select_content(['decruft','xpath'])
 	u.build_post()
 
-def crawl(seeds, query, depth=2):
+def crawl(seeds, query, depth=1):
 	print '[LOG]:: Starting Crawler with Depth set to %d' % depth
 	print '[LOG]:: Seeds are %s' % str(seeds)
 	print '[LOG]:: Query is "%s"' % query
@@ -230,16 +243,17 @@ def crawl(seeds, query, depth=2):
 		depth -= 1
 		crawl(seeds, query, depth)
 
-#seeds = set([u'http://fr.wikipedia.org/wiki/Mar%C3%A9e_verte', u'http://www.perdu.com/','http://ant1.cc/files/diss_br.pdf',u'http://www.actu-environnement.com/ae/news/plan_algues_vertes_bretagne_8105.php4'])
-seeds = query_bing("Algues Vertes","HIDDEN", nb_results=2)
-query = "Algues Vertes"
 
-crawl(seeds, query)
+if __name__ == '__main__':
+	seeds = query_bing("Algues Vertes","HIDDEN", nb_results=2)
+	query = "Algues Vertes"
 
-build_inlinks_clean_outlinks(posts)
+	crawl(seeds, query)
 
-post_to_db(query, posts)
+	build_inlinks_clean_outlinks(posts)
+	
+	pp = pprint.PrettyPrinter(indent=4)
+	pp.pprint(posts)
+	graph(posts)
+	post_to_db(query, posts)
 
-
-pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(posts)
