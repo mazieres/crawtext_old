@@ -42,6 +42,7 @@ class Content:
 		self.xml_src = etree.HTML(src)
 
 	def get_content_xpath(self):
+        # Huge thanks to Renaud Lifchitz for this idea
 		d = {}
 		self.xpath = ''
 		def build_xpath(src_xml, src_xml_tag):
@@ -227,7 +228,7 @@ def parse(url):
 	u.select_content(['decruft','xpath'])
 	u.build_post()
 
-def crawl(seeds, query, depth=1):
+def crawl(seeds, query, depth=0):
 	print '[LOG]:: Starting Crawler with Depth set to %d' % depth
 	print '[LOG]:: Seeds are %s' % str(seeds)
 	print '[LOG]:: Query is "%s"' % query
