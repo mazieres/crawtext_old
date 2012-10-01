@@ -1,13 +1,67 @@
 {% extends "base.html" %}
 {% block title %}Crawtext{% endblock %}
 {% block content %}
-<h1>Crawtext</h1>
-<br />
-<form action="{{ url_for('start_crawler') }}" method=post>
+  <div class="row">
+  	<div class="eight columns" style="text-align:right;">
+  		<ul class="breadcrumbs" style="background:none;border:none;">
+  		<li><a href="https://github.com/mazieres/crawtext">Source code</a></li>
+  		<li><a href="mailto:contact@cortext.fr">Contact</a></li>
+  		<li><a href="#" data-reveal-id="aboutModal">About</a></li>
+  		</ul>
+  	</div>
+  </div>
+
+  <div id="aboutModal" class="reveal-modal">
+    <h2>About Crawtext</h2>
+    <br />
+    <p>Crawtext provides you precise insights on web communities and content regarding a query of your choice.</p>
+    <p>Created by <a href="https://github.com/mazieres" target="_blank">@mazieres</a>,<a href="https://github.com/jphcoi" target="_blank">@jphcoi</a> and <a href="https://github.com/mogoutov" target="_blank">@mogoutov</a> along with the <a href="http://www.cortext.fr" target="_blank">Cortext</a> team.</p>
+    <p>More info on <a href="https://github.com/mazieres/crawtext/" target="_blank">Github</a>.</p>
+    <a class="close-reveal-modal">×</a>
+  </div>
+
+
+  <div class="row" style="margin-top:100px;">
+    <div class="eight columns">
+    	<h1 style="font-weight:lighter;">Crawtext</h1>
+    	<p style="font-size:24px;font-weight:lighter;">Yet another minimalist web crawler.</p>
+    	<br />
+    	<p><img src="{{ url_for('static', filename='images/infinity.jpg') }}" align="right"></p>
+	</div>
+
+  	<div class="four columns">
+  		<br />
+  		<p style="padding-top: 200px;text-align:left;"><a href="#" class="large secondary button">Start a Crawl</a></p>
+  	</div>
+  </div>
+
+
+  <!-- <div class="row">
+    <div class="four columns" align="">
+  		  		<p style="font-size:12px; text-align:justify">Crawtext provides you precise insights on web communities and content regarding a query of your choice.</p>
+
+  	</div>
+  </div> -->
+
+
+
+<!-- 
+  <div class="row">
+  	<div class="eight columns">
+  		
+  	</div>
+  </div> -->
+
+
+
+<!-- <form action="{{ url_for('start_crawler') }}" method=post>
 Query :: <input type="text" name="query" value="">
 <br />
 Depth :: <input type="number" name="depth" value="2">
 <br />
+Email :: <input type="text" name="email" value="name@mail.com">
+<br />
 <input type="submit" value="Start Crawl">
-</form>
+</form> -->
+
 {% endblock %}

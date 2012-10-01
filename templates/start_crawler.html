@@ -2,10 +2,11 @@
 {% block title %}Crawtext :: Start Crawler{% endblock %}
 {% block content %}
 <h1>Crawtext</h1>
-<b>Starting Crawtext with the following parameters:</b>
+<b>You are about to start a crawl with the following parameters: </b>
 <br />
-Query: {{ query }}
+Query: <b>{{ query }}</b>
 <br />
-Depth: {{ depth }}
+Depth: <b>{{ depth }}</b>
 <br />
+When the crawl is finished, an email will be sent to <b>{{ email }}</b>
 {% endblock %}

@@ -11,7 +11,7 @@ def hello():
 
 @app.route("/start_crawler", methods=['POST'])
 def start_crawler():
-	return render_template('start_crawler.html', query=request.form['query'], depth=request.form['depth'])
+	return render_template('start_crawler.html', query=request.form['query'], depth=request.form['depth'], email=request.form['email'])
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", debug=True)
