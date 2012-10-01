@@ -23,6 +23,8 @@ from pattern.graph import *
 reload(sys) 
 sys.setdefaultencoding("utf-8")
 
+nb_thread_limit = 200
+
 root_url = 'https://api.datamarket.azure.com/Bing/Search/'
 markets_list = ["ar-XA","bg-BG","cs-CZ","da-DK","de-AT","de-CH","de-DE","el-GR","en-AU","en-CA","en-GB","en-ID","en-IE","en-IN","en-MY","en-NZ","en-PH","en-SG","en-US","en-XA","en-ZA","es-AR","es-CL","es-ES","es-MX","es-US","es-XL","et-EE","fi-FI","fr-BE","fr-CA","fr-CH","fr-FR","he-IL","hr-HR","hu-HU","it-IT","ja-JP","ko-KR","lt-LT","lv-LV","nb-NO","nl-BE","nl-NL","pl-PL","pt-BR","pt-PT","ro-RO","ru-RU","sk-SK","sl-SL","sv-SE","th-TH","tr-TR","uk-UA","zh-CN","zh-HK","zh-TW"]
 user_agents = [u'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1', u'Mozilla/5.0 (Windows NT 6.1; rv:15.0) Gecko/20120716 Firefox/15.0a2', u'Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0', u'Opera/9.80 (Windows NT 6.1; U; es-ES) Presto/2.9.181 Version/12.00', ]
@@ -228,17 +230,21 @@ def parse(url):
 	u.select_content(['decruft','xpath'])
 	u.build_post()
 
-def crawl(seeds, query, depth=0):
+def chunks(l, n):
+    return [l[i:i+n] for i in range(0, len(l), n)]
+
+def crawl(seeds, query, depth=2):
 	print '[LOG]:: Starting Crawler with Depth set to %d' % depth
 	print '[LOG]:: Seeds are %s' % str(seeds)
 	print '[LOG]:: Query is "%s"' % query
 	while depth >= 0:
-		for url in seeds:
-			t = threading.Thread(None, parse, None, (url,))
-			t.start()
-			threads.append(t)
-		for thread in threads:
-			thread.join()
+		for each in chunks(list(seeds),nb_thread_limit):
+			for url in each:
+				t = threading.Thread(None, parse, None, (url,))
+				t.start()
+				threads.append(t)
+			for thread in threads:
+				thread.join()
 		seeds = {x for x in next_seeds if x not in posts.keys()}
 		next_seeds.clear()
 		depth -= 1
@@ -246,7 +252,7 @@ def crawl(seeds, query, depth=0):
 
 
 if __name__ == '__main__':
-	seeds = query_bing("Algues Vertes","HIDDEN", nb_results=2)
+	seeds = query_bing("Algues Vertes","HIDDEN", nb_results=10)
 	query = "Algues Vertes"
 
 	crawl(seeds, query)
