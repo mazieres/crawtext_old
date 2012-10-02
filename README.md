@@ -1,6 +1,9 @@
 Dependencies
 ------------
 
-All available from easy_install: **json, pymongo, pattern, decruft, lxml, flask**
+**pymongo, pattern, lxml, flask** from easy_install
+
+**decruft** from http://code.google.com/p/decruft/
+
 
 
