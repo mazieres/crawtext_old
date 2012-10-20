@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Crawtext: Set up a Crawl{% endblock %}
+{% block content %}
+
+<div class="row" style="margin-top:50px;">
+	<div class="four columns">
+		<h3 style="font-weight:lighter;">Crawtext</h3>
+		<p style="font-weight:lighter;">Choose how your crawler will behave</p>
+	</div>
+	<div class="four columns" style="float:left;">
+		<dl class="tabs">
+        	<dd class="active"><a href="#simple1">Settings</a></dd>
+        	<dd><a href="#simple2">Advanced</a></dd>
+        </dl>
+		<ul class="tabs-content">
+        	<li class="active" id="simple1Tab">
+<!-- 				<h3 style="font-weight:lighter;">Set up a crawl</h3>
+-->				<form action="{{ url_for('start_crawler') }}" method=post>
+					Query :: <input type="text" name="query" value=""> { This is the query that will decide wether pages are relevant or not }
+					<br />
+					Depth :: <input type="number" name="depth" value="2">
+					<br />
+					Email :: <input type="text" name="email" value="name@mail.com">
+					<br />
+					<input type="submit" value="Start Crawl">
+				</form>
+			</li>
+			<li id="simple2Tab">
+				<form action="{{ url_for('start_crawler') }}" method=post>
+					Seeds Query :: <input type="text" name="seeds_query" value="">
+					<br />
+					Crawl Query :: <input type="text" name="crawl" value="">
+					<br />
+					Depth :: <input type="number" name="depth" value="2">
+					<br />
+					Email :: <input type="text" name="email" value="name@mail.com">
+					<br />
+					<input type="submit" value="Start Crawl">
+				</form>
+			</li>
+	</div>
+</div>
