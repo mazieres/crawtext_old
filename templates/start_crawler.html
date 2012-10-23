@@ -1,12 +1,96 @@
 {% extends "base.html" %}
-{% block title %}Crawtext :: Start Crawler{% endblock %}
+{% block title %}Crawtext: Check and launch your Crawl{% endblock %}
 {% block content %}
-<h1>Crawtext</h1>
-<b>You are about to start a crawl with the following parameters: </b>
-<br />
-Query: <b>{{ query }}</b>
-<br />
-Depth: <b>{{ depth }}</b>
-<br />
-When the crawl is finished, an email will be sent to <b>{{ email }}</b>
+
+<div class="row" style="margin-top:50px;">
+	<div class="four columns">
+		<a href="{{ url_for('index') }}"><h3 style="font-weight:lighter;"><img src="{{ url_for('static', filename='images/infinity_tiny.gif') }}"> Crawtext</h3></a>
+		<p style="font-weight:lighter;">Check how your crawler is configured</p>
+	</div>
+	<div class="eight columns" style="float:left;">
+		<h4 class="subheader">Your crawler is configured with the following options: </h4>
+		<br />
+		<table>
+			<thead>
+				<tr>
+					<th>Option</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Query</td>
+					{% if query %}
+						<td>{{ query }}</td>
+					{% else %}
+						<td><font color=red>You MUST provide a query !</font></td> 
+					{% endif %}
+				</tr>
+				<tr>
+					<td>Number of seeds from Bing</td>
+					{% if nb_seeds %}
+						<td>{{ nb_seeds }}</td>
+					{% else %}
+						<td><font color=red>You MUST provide a number of seeds ! (0 is ok)</font></td>
+					{% endif %}
+				</tr>
+				<tr>
+					<td>Seed-specific query</td>
+					{% if seeds_query %}
+						<td>{{ seeds_query }}</td>
+					{% else %}
+						{% if query %}
+							<td>{{ query }}</td>
+						{% else %}
+							<td>None</td> 
+						{% endif %}
+					{% endif %}
+				</tr>
+				<tr>
+					<td>Additional seeds</td>
+					{% if added_seeds %}
+						<td>{{ added_seeds }}</td>
+					{% else %}
+						{% if nb_seeds == 0 %}
+							<td><font color=red>With 0 seeds from bing, you MUST provide additional seeds</font></td>
+						{% else %}
+							<td>None</td>
+						{% endif %}
+					{% endif %}
+				</tr>
+				<tr>
+					<td>Include PDF files</td>
+						<td>{{ pdf }}</td>
+				</tr>
+				<tr>
+					<td>Depth</td>
+					{% if depth %}
+						<td>{{ depth }}</td>
+					{% else %}
+						<td><font color=red>You MUST provide a depth ! (0 is not ok)</font></td>
+					{% endif %}
+				</tr>
+				<tr>
+					<td>Email</td>
+					{% if email %}
+						<td>{{ email }}</td>
+					{% else %}
+						<td><font color=red>You MUST provide an email !</font></td>
+					{% endif %}
+				</tr>
+			</tbody>
+		</table>
+		<br />
+		<a href="{{ url_for('set_crawler') }}"><b><< Back</b></a> <a href="#" class="large secondary button" style="float:right;">Next >></a>
+	</div>
+</div>
+
 {% endblock %}
+<!-- 
+
+					<td>Number of seeds from Bing</td>
+					<td>Seed-specific query</td>
+					<td>Additional seeds</td>
+					<td>Include PDF files</td>
+					<td>Depth</td>
+					<td>Email</td> -->

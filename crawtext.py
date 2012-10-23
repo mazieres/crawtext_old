@@ -30,7 +30,7 @@ markets_list = ["ar-XA","bg-BG","cs-CZ","da-DK","de-AT","de-CH","de-DE","el-GR",
 user_agents = [u'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1', u'Mozilla/5.0 (Windows NT 6.1; rv:15.0) Gecko/20120716 Firefox/15.0a2', u'Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0', u'Opera/9.80 (Windows NT 6.1; U; es-ES) Presto/2.9.181 Version/12.00', ]
 unwanted_extensions = ['css','js','gif','GIF','jpeg','JPEG','jpg','JPG','pdf','PDF','ico','ICO','png','PNG','dtd','DTD']
 allowed_mimetypes = ['text/html']
-unwanted_domain = ['facebook.com']
+unwanted_domain = ['www.facebook.com']
 
 new_seeds = set()
 next_seeds = set()
@@ -220,7 +220,7 @@ def parse(url):
 	if not u.check_mimetype():
 		print '[LOG]:: The page %s is not HTML and won\'t be parsed: Discarded.' %  u.uri
 		return
-	if not u.check.domain():
+	if not u.check_domain():
 		print '[LOG]:: The page %s belong to unwanted domain list' % u.uri
 		return
 	u.get_src()
