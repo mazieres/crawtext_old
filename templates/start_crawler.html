@@ -81,7 +81,10 @@
 			</tbody>
 		</table>
 		<br />
-		<a href="{{ url_for('set_crawler') }}"><b><< Back</b></a> <a href="#" class="large secondary button" style="float:right;">Next >></a>
+		<a href="{{ url_for('set_crawler') }}"><b><< Back</b></a> 
+		{% if query and depth and email and nb_seeds and seeds_query and pdf %}
+		<a href="#" class="large secondary button" style="float:right;">Next >></a>
+		{% endif %}
 	</div>
 </div>
 

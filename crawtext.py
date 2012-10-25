@@ -240,7 +240,7 @@ def parse(url):
 def chunks(l, n):
     return [l[i:i+n] for i in range(0, len(l), n)]
 
-def crawl(seeds, query, depth=2):
+def crawl(seeds, query, depth=1):
 	print '[LOG]:: Starting Crawler with Depth set to %d' % depth
 	print '[LOG]:: Seeds are %s' % str(seeds)
 	print '[LOG]:: Query is "%s"' % query

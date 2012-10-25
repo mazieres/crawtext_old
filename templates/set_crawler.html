@@ -14,8 +14,7 @@
         </dl>
 		<ul class="tabs-content">
         	<li class="active" id="simple1Tab">
-<!-- 				<h3 style="font-weight:lighter;">Set up a crawl</h3>
--->				<form action="{{ url_for('start_crawler') }}" method=post>
+				<form action="{{ url_for('start_crawler') }}" method=post>
 
 					<p>Query <i><small>The query that will determine if pages are relevant or not</small></i><input type="text" name="query" value=""></p>
 
@@ -27,7 +26,7 @@
 				</form>
 			</li>
 			<li id="simple2Tab">
-				<form action="{{ url_for('start_crawler') }}" method=post>
+				<form action="{{ url_for('start_crawler_adv') }}" method=post>
 
 					<p>Additional Seeds <i><small>Paste the raw input from which urls will be extracted</small></i><textarea type="text" name="added_seeds" ROWS="10" value=""></textarea></p>
 
