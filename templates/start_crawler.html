@@ -83,7 +83,15 @@
 		<br />
 		<a href="{{ url_for('set_crawler') }}"><b><< Back</b></a> 
 		{% if query and depth and email and nb_seeds and seeds_query and pdf %}
-		<a href="#" class="large secondary button" style="float:right;">Next >></a>
+		<form action="{{ url_for('confirmation') }}" method=post>
+		<input type="hidden" name="query" value="{{ query }}">
+		<input type="hidden" name="depth" value="{{ depth }}">
+		<input type="hidden" name="email" value="{{ email }}">
+		<input type="hidden" name="nb_seeds" value="{{ nb_seeds }}">
+		<input type="hidden" name="seeds_query" value="{{ seeds_query }}">
+		<input type="hidden" name="added_seeds" value="{{ added_urls }}">
+		<input type="hidden" name="pdf" value="{{ pdf }}">
+		<input type="submit" class="large secondary button" value="Launch !" style="float:right;">
 		{% endif %}
 	</div>
 </div>
