@@ -94,8 +94,17 @@ class Page:
 		self.src = URL(self.uri).open(user_agent=choice(user_agents)).read()
 
 	def is_relevant(self):
-		
-		return bool(re.search(query.replace(' ','.*'), self.src, re.IGNORECASE))
+		if 'OR' in query:
+			for each in query.split('OR'):
+				query4re = each.lower().replace(' ', '.*')
+				if re.search(query4re, self.src, re.IGNORECASE) or re.search(query4re, self.uri, re.IGNORECASE):
+					return True
+		elif 'AND' in query:
+			query4re = query.lower().replace(' AND ', '.*').replace(' ', '.*')
+			return bool(re.search(query4re, self.src, re.IGNORECASE) or re.search(query4re, self.uri, re.IGNORECASE))
+		else:
+			query4re = query.lower().replace(' ', '.*')
+			return bool(re.search(query4re, self.src, re.IGNORECASE) or re.search(query4re, self.uri, re.IGNORECASE))
 
 	def get_outlinks(self):
 		for found_url in find_urls(self.src, unique=True):
