@@ -70,7 +70,8 @@ class Content:
 					pass
 
 	def get_content_decruft(self):
-		self.decruft = Document(self.raw_src).summary()
+		html_summary = Document(self.raw_src).summary()
+		self.decruft = web.plaintext(html_summary, keep=[], replace=web.blocks, linebreaks=2, indentation=False)
 
 
 class Page:
@@ -93,6 +94,7 @@ class Page:
 		self.src = URL(self.uri).open(user_agent=choice(user_agents)).read()
 
 	def is_relevant(self):
+		
 		return bool(re.search(query.replace(' ','.*'), self.src, re.IGNORECASE))
 
 	def get_outlinks(self):
