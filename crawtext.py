@@ -71,7 +71,7 @@ class Content:
 
 	def get_content_decruft(self):
 		html_summary = Document(self.raw_src).summary()
-		self.decruft = web.plaintext(html_summary, keep=[], replace=web.blocks, linebreaks=2, indentation=False)
+		self.decruft = plaintext(html_summary, keep=[], replace=blocks, linebreaks=2, indentation=False)
 
 
 class Page:
@@ -88,10 +88,16 @@ class Page:
 		if extension(self.pattern.page) in unwanted_extensions:
 			return False
 		else:
-			return bool(self.pattern.mimetype == 'text/html')
-
+			try:
+		 		return bool(self.pattern.mimetype == 'text/html')
+		 	except:
+		 		return False
 	def get_src(self):
-		self.src = URL(self.uri).open(user_agent=choice(user_agents)).read()
+		try:
+			self.src = URL(self.uri).open(user_agent=choice(user_agents)).read()
+			return True
+		except:
+			return False
 
 	def is_relevant(self):
 		if 'OR' in query:
@@ -234,7 +240,9 @@ def parse(url):
 	if not u.check_domain():
 		print '[LOG]:: The page %s belong to unwanted domain list' % u.uri
 		return
-	u.get_src()
+	if not u.get_src():
+		print '[LOG]:: The page %s cannot be parsed (403,404)' % u.uri
+		return
 	if not u.is_relevant():
 		print '[LOG]:: The page %s doesn\'t seem relevant regarding the query: Discarded.' % u.uri
 		return
@@ -270,7 +278,7 @@ def crawl(seeds, query, depth=1):
 
 
 if __name__ == '__main__':
-	seeds = query_bing("Algues Vertes","HIDDEN", nb_results=10)
+	seeds = query_bing("Algues Vertes","", nb_results=10)
 	query = "Algues Vertes"
 
 	crawl(seeds, query)
