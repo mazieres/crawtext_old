@@ -34,6 +34,7 @@ unwanted_domain = ['www.facebook.com']
 
 new_seeds = set()
 next_seeds = set()
+bad_seeds = set()
 
 posts = {}
 
@@ -236,15 +237,23 @@ def parse(url):
 	u = Page(url)
 	if not u.check_mimetype():
 		print '[LOG]:: The page %s is not HTML and won\'t be parsed: Discarded.' %  u.uri
+		bad_seeds.add(u.uri)
+		del u
 		return
 	if not u.check_domain():
 		print '[LOG]:: The page %s belong to unwanted domain list' % u.uri
+		bad_seeds.add(u.uri)
+		del u
 		return
 	if not u.get_src():
 		print '[LOG]:: The page %s cannot be parsed (403,404)' % u.uri
+		bad_seeds.add(u.uri)
+		del u
 		return
 	if not u.is_relevant():
 		print '[LOG]:: The page %s doesn\'t seem relevant regarding the query: Discarded.' % u.uri
+		bad_seeds.add(u.uri)
+		del u
 		return
 	print '[LOG]:: The page %s is relevant.' % u.uri
 	u.get_outlinks()
@@ -266,9 +275,10 @@ def crawl(seeds, query, depth=1):
 	while depth >= 0:
 		for each in chunks(list(seeds),nb_thread_limit):
 			for url in each:
-				t = threading.Thread(None, parse, None, (url,))
-				t.start()
-				threads.append(t)
+				if url not in bad_seeds:
+					t = threading.Thread(None, parse, None, (url,))
+					t.start()
+					threads.append(t)
 			for thread in threads:
 				thread.join()
 		seeds = {x for x in next_seeds if x not in posts.keys()}
