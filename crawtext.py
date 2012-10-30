@@ -135,19 +135,22 @@ class Page:
 
 	def better_uri(self):
 		elem = Element(self.src)
-		for e in elem.by_tag("meta"):
-			if 'property' in e.attributes and e.attributes['property'] == 'og:url':
-				self.better_uri = e.attributes['content']
-			else:
-				return False
+		try:
+			for e in elem.by_tag("meta"):
+				if 'property' in e.attributes and e.attributes['property'] == 'og:url':
+					self.better_uri = e.attributes['content']
+				else:
+					return False
+		except:
+			return False
 
 	def build_post(self):
 		self.post = {}
 		self.post['url'] = self.uri
-		#self.post['src'] = self.src
 		self.post['outlinks'] = self.outlinks
 		self.post['inlinks'] = self.inlinks
 		self.post['content'] = {}
+		self.post['content']['src'] = repr(self.src)
 		if self.content_xpath:
 			self.post['content']['xpath'] = self.content_xpath
 		if self.content_decruft:
@@ -259,6 +262,14 @@ def parse(url):
 		bad_seeds.add(u.uri)
 		del u
 		return
+	if u.better_uri():
+		if u.better_uri in posts.keys():
+			print '[LOG]:: the page %s has already been parsed as %s' % (u.uri, u.better_uri)
+			bad_seeds.add(u.uri)
+			del u
+			return
+		else:
+			u.uri = u.better_uri
 	if not u.is_relevant():
 		print '[LOG]:: The page %s doesn\'t seem relevant regarding the query: Discarded.' % u.uri
 		bad_seeds.add(u.uri)
