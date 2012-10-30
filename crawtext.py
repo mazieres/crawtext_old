@@ -93,6 +93,7 @@ class Page:
 		 		return bool(self.pattern.mimetype == 'text/html')
 		 	except:
 		 		return False
+
 	def get_src(self):
 		try:
 			self.src = URL(self.uri).open(user_agent=choice(user_agents)).read()
@@ -131,6 +132,14 @@ class Page:
 		if 'xpath' in method:
 			c.get_content_xpath()
 			self.content_xpath = c.xpath
+
+	def better_uri(self):
+		elem = Element(self.src)
+		for e in elem.by_tag("meta"):
+			if 'property' in e.attributes and e.attributes['property'] == 'og:url':
+				self.better_uri = e.attributes['content']
+			else:
+				return False
 
 	def build_post(self):
 		self.post = {}
