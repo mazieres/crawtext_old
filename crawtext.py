@@ -19,6 +19,7 @@ import operator
 from lxml import etree
 import copy
 from pattern.graph import *
+import gc
 
 reload(sys) 
 sys.setdefaultencoding("utf-8")
@@ -144,6 +145,36 @@ class Page:
 		except:
 			return False
 
+	def clean_object(self):
+		try:
+			self.uri = None
+		except:
+			pass
+		try:
+			self.outlinks = None
+		except:
+			pass
+		try:
+			self.inlinks = None
+		except:
+			pass
+		try:
+			self.src = None
+		except:
+			pass
+		try:
+			self.content_xpath = None
+		except:
+			pass
+		try:
+			self.content_decruft = None
+		except:
+			pass
+		try:
+			self.pattern = None
+		except:
+			pass
+
 	def build_post(self):
 		self.post = {}
 		self.post['url'] = self.uri
@@ -250,30 +281,35 @@ def parse(url):
 	if not u.check_mimetype():
 		print '[LOG]:: The page %s is not HTML and won\'t be parsed: Discarded.' %  u.uri
 		bad_seeds.add(u.uri)
-		del u
+		u.clean_object()
+		u = None
 		return
 	if not u.check_domain():
 		print '[LOG]:: The page %s belong to unwanted domain list' % u.uri
 		bad_seeds.add(u.uri)
-		del u
+		u.clean_object()
+		u = None
 		return
 	if not u.get_src():
 		print '[LOG]:: The page %s cannot be parsed (403,404)' % u.uri
 		bad_seeds.add(u.uri)
-		del u
+		u.clean_object()
+		u = None
 		return
 	if u.better_uri():
 		if u.better_uri in posts.keys():
 			print '[LOG]:: the page %s has already been parsed as %s' % (u.uri, u.better_uri)
 			bad_seeds.add(u.uri)
-			del u
+			u.clean_object()
+			u = None
 			return
 		else:
 			u.uri = u.better_uri
 	if not u.is_relevant():
 		print '[LOG]:: The page %s doesn\'t seem relevant regarding the query: Discarded.' % u.uri
 		bad_seeds.add(u.uri)
-		del u
+		u.clean_object()
+		u = None
 		return
 	print '[LOG]:: The page %s is relevant.' % u.uri
 	u.get_outlinks()
@@ -284,6 +320,9 @@ def parse(url):
 	print '%d parsed links: ' % len(u.outlinks)
 	u.select_content(['decruft','xpath'])
 	u.build_post()
+	u.clean_object()
+	u = None
+	
 
 def chunks(l, n):
     return [l[i:i+n] for i in range(0, len(l), n)]
@@ -295,13 +334,14 @@ def crawl(seeds, query, depth=1):
 	while depth >= 0:
 		for each in chunks(list(seeds),nb_thread_limit):
 			for url in each:
-				if url not in bad_seeds:
-					t = threading.Thread(None, parse, None, (url,))
-					t.start()
-					threads.append(t)
+				t = threading.Thread(None, parse, None, (url,))
+				t.start()
+				threads.append(t)
 			for thread in threads:
 				thread.join()
-		seeds = {x for x in next_seeds if x not in posts.keys()}
+			collected = gc.collect()
+			print "Garbage collector: collected %d objects." % (collected)
+		seeds = {x for x in next_seeds if x not in posts.keys() and x not in bad_seeds}
 		next_seeds.clear()
 		depth -= 1
 		crawl(seeds, query, depth)
